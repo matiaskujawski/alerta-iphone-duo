@@ -1,0 +1,27 @@
+name: Alerta stock iPhone Duo
+
+on:
+  schedule:
+    # Cada 30 min lanza un turno; si ya hay uno corriendo, el nuevo espera en cola,
+    # así siempre hay uno activo vigilando sin huecos.
+    - cron: "*/30 * * * *"
+  workflow_dispatch:   # botón "Run workflow" para arrancarlo a mano
+
+concurrency:
+  group: alerta-iphone
+  cancel-in-progress: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Vigilar stock
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          MAX_RUNTIME_SEG: "20700"   # 5 h 45 min
+        run: python3 alerta_iphone.py
