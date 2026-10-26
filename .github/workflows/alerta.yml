@@ -22,6 +22,6 @@ jobs:
           python-version: "3.12"
       - name: Vigilar stock
         env:
-          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC || 'iphone-duo-mati-68d4f5b1' }}
           MAX_RUNTIME_SEG: "20700"   # 5 h 45 min
         run: python3 alerta_iphone.py
